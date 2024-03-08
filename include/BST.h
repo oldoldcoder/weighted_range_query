@@ -10,7 +10,7 @@
 #include "openssl/bn.h"
 #include "alias_method.h"
 /*--------------------常量定义--------------------*/
-
+#define CQ_MAX_LENGTH 1000;
 /*--------------------结构定义-------------------*/
 typedef struct tree_node{
     // vode是分割的值,分割的时候是用val而不是权值
@@ -30,6 +30,10 @@ typedef struct tree_node{
     // 左右节点
     struct tree_node * left;
     struct tree_node * right;
+
+    // 记录子树的数据量
+    int N;
+
 }tree_node;
 
 // 树的定义
@@ -44,15 +48,20 @@ typedef struct bst_tree{
 // CQ集合
 typedef struct CQ{
     tree_node ** ele;
+    int maxLength;
+    int idx;
 }c_query;
 /*--------------------方法定义-------------------*/
 // 初始化一个树
-result bst_init_tree();
+result bst_init_tree(bst_tree * tree, int n,data_set * set);
 // 初始化一个树节点
-result bst_init_node();
+result bst_init_node(tree_node * node);
 // 构建一颗树
 result bst_create_tree(tree_node * node,data_set * total,int lef,int rig);
 // 查询的具体算法
 result bst_search(tree_node * node,BIGNUM * lef,BIGNUM *right,c_query * CQ);
 // 求出CQ的加和，随机一个R值，然后计算满足不等式的i的值
 result bst_middle_process(int * i , c_query *cq);
+
+// 初始化一个CQ
+result bst_init_CQ(c_query * cq);

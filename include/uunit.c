@@ -32,13 +32,13 @@ inline result copy_pair(pair * to,pair *from){
     return SUCCESS;
 }
 // 计算平均值,我们的平均值最后取的小值，然后在最后l1，l2往内部放的时候，我们应该去判断
-result compute_avg_weight(BIGNUM *res,struct data_set * set){
-    int n = set->N;
+result compute_avg_weight(BIGNUM *res,struct data_set * set,int lef,int rig){
+    int n = rig - lef + 1;
     BIGNUM * tmp = BN_CTX_get(CTX);
     BIGNUM * nn = BN_CTX_get(CTX);
     BN_set_word(nn,n);
     BN_set_word(tmp,0);
-    for(int i = 0 ; i < n ; ++i){
+    for(int i = lef ; i <= rig ; ++i){
         BN_add(tmp,tmp,set->data[i]->weight);
     }
     // 除法计算,给余数位置上了null值
@@ -62,5 +62,31 @@ result init_data_set(data_set * set,int n){
             return ERROR;
     }
 
+    return SUCCESS;
+}
+
+result compute_avg_val(BIGNUM *res, data_set * set,int lef,int rig,BIGNUM * lower,BIGNUM * upper){
+    int n = rig - lef + 1;
+    BIGNUM * tmp = BN_CTX_get(CTX);
+    BIGNUM * nn = BN_CTX_get(CTX);
+    BN_set_word(nn,n);
+    BN_set_word(tmp,0);
+    // 赋初值
+    BN_set_word(lower,9999999999);
+    BN_set_word(upper,-999999999);
+
+    for(int i = lef ; i <= rig ; ++i){
+        BN_add(tmp,tmp,set->data[i]->val);
+        if(BN_cmp(set->data[i]->val,lower) == -1){
+            BN_copy(lower,set->data[i]->val);
+        }else if(BN_cmp(set->data[i]->val,upper) == 1){
+            BN_copy(upper,set->data[i]->val);
+        }
+    }
+    // 除法计算,给余数位置上了null值
+    if(BN_div(res,NULL,tmp,nn,CTX) != 1)
+        return ERROR;
+    BN_clear(tmp);
+    BN_clear(nn);
     return SUCCESS;
 }

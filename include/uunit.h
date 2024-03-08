@@ -41,5 +41,8 @@ result copy_pair(pair * to,pair *from);
 inline result init_constant();
 // free常量
 result free_constant();
-// 计算平均值
-result compute_avg_weight(BIGNUM *res,struct data_set * set);
+// 计算权值平均值
+result compute_avg_weight(BIGNUM *res, data_set * set,int lef,int rig);
+
+// 计算值的平均值
+result compute_avg_val(BIGNUM *res, data_set * set,int lef,int rig,BIGNUM * lower,BIGNUM * upper);

@@ -33,12 +33,11 @@ typedef struct list{
     list_node * root;
     list_node * now;
 }list;
-
 /*------------------------方法定义----------------------*/
 // 初始化一个bin
-result alias_init_bin(data_set * set,bin * bins);
+result alias_init_bin(data_set * set,bin * bins,int lef,int rig);
 // 将一个data_set直接分割为L1和L2两部分
-result alias_divide_data2_list(data_set * data,list * l1,list * l2);
+result alias_divide_data2_list(data_set * data,list * l1,list * l2,int lef,int rig);
 // 将LIST数据填充到bin之中去
 result alias_list_fill_bin(bin * bins,list * l1,list * l2);
 // 销毁list数据结构

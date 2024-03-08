@@ -2,12 +2,12 @@
 #include "stdio.h"
 
 // 初始化一个bin
-result alias_init_bin(data_set * set,bin * bins){
-    int n = set->N;
+result alias_init_bin(data_set * set,bin * bins,int lef,int rig){
+    int n = rig - lef + 1;
     bins->n = n;
     bins->avg_weight = BN_CTX_get(CTX);
     // 计算平均值
-    if(compute_avg_weight(bins->avg_weight,set) != SUCCESS)
+    if(compute_avg_weight(bins->avg_weight,set,lef,rig) != SUCCESS)
         return ERROR;
     // 开辟bin的空间
     bins->units = (bin_unit **) malloc(n * sizeof (bin_unit));
@@ -31,12 +31,12 @@ result alias_init_bin(data_set * set,bin * bins){
 
 }
 // 将一个data_set直接分割为L1和L2两部分
-result alias_divide_data2_list(data_set * set,list * l1,list * l2){
+result alias_divide_data2_list(data_set * set,list * l1,list * l2,int lef,int rig){
     // 按照平均值分
     BIGNUM  *avg = set->avg_weight;
-    int n = set->N;
+    int n = rig - lef + 1;
     list * tmp;
-    for(int i = 0 ; i < n ; ++i){
+    for(int i = lef ; i <= rig ; ++i){
         list_node * next = (list_node * ) malloc(sizeof (list_node));
         if(next == NULL)
             return ERROR;
